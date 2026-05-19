@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACTICAL // MAIN MENU</title>
+    <style>
+        /* Valorant-inspired Design System Variables */
+        :root {
+            --v-red: #ff4655;
+            --v-dark: #11141a;
+            --v-dark-muted: #1f2326;
+            --v-light: #ece8e1;
+            --v-gray: #7e7e7e;
+            --v-font: 'Arial Black', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--v-dark);
+            font-family: var(--v-font);
+            color: var(--v-light);
+        }
+
+        /* Game-Style Animated Background */
+        .game-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(rgba(17, 20, 26, 0.85), rgba(17, 20, 26, 0.95)),
+                url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+            overflow: hidden;
+        }
+
+        /* Tactical Grid Overlay */
+        .game-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: rotate(-5deg);
+            animation: gridPan 120s linear infinite;
+        }
+
+        @keyframes gridPan {
+            0% { transform: rotate(-5deg) translateY(0); }
+            100% { transform: rotate(-5deg) translateY(-50px); }
+        }
+
+        /* UI Framework Layout */
+        .ui-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            padding: 60px 100px;
+            position: relative;
+            z-index: 10;
+            transition: filter 0.4s ease, opacity 0.4s ease;
+        }
+
+        /* Left Column: Main Identity & Primary Menu */
+        .left-panel {
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .game-logo {
+            font-size: 14px;
+            letter-spacing: 6px;
+            color: var(--v-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-logo::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: var(--v-red);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        /* Navigation Menu Styling */
+        .main-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: -100px;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            color: var(--v-light);
+            font-family: var(--v-font);
+            font-size: 32px;
+            text-transform: uppercase;
+            text-align: left;
+            letter-spacing: 2px;
+            cursor: pointer;
+            padding: 10px 0 10px 20px;
+            position: relative;
+            transition: color 0.15s ease, transform 0.15s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            height: 70%;
+            width: 0;
+            background-color: var(--v-red);
+            transition: width 0.15s ease;
+        }
+
+        .menu-btn:hover {
+            color: var(--v-red);
+            transform: translateX(10px);
+        }
+
+        .menu-btn:hover::before {
+            width: 4px;
+        }
+
+        .footer-version {
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--v-gray);
+        }
+
+        /* Right Content Area: Swappable Views */
+        .right-panel {
+            flex-grow: 1;
+            margin-left: 80px;
+            position: relative;
+            height: 100%;
+        }
+
+        .screen-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(30px);
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .screen-content.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        /* Default Welcome Screen Custom Content Area */
+        .welcome-art-container {
+            width: 100%;
+            max-width: 1100px;
+            height: 75vh;
+            border: 1px solid rgba(236, 232, 225, 0.1);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(31,35,38,0.4) 0%, rgba(17,20,26,0.8) 100%);
+        }
+
+        /* Border trim detail for the welcome container */
+        .welcome-art-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--v-red);
+        }
+
+        .welcome-splash-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 25%;
+            opacity: 0.65;
+            filter: grayscale(15%) contrast(105%);
+        }
+
+        .welcome-overlay-text {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            z-index: 5;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+        }
+
+        .welcome-tagline {
+            font-size: 14px;
+            color: var(--v-red);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .welcome-heading {
+            font-size: 44px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        /* Tech HUD elements over the central splash image */
+        .hud-bracket {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid rgba(236, 232, 225, 0.2);
+            z-index: 4;
+        }
+        .bracket-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .bracket-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        /* View-Specific Title Formatting */
+        .screen-title {
+            font-size: 48px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(236, 232, 225, 0.1);
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .screen-subtitle {
+            font-size: 14px;
+            color: var(--v-red);
+            letter-spacing: 2px;
+        }
+
+        /* Mode Selection Grid */
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+        }
+
+        .mode-card {
+            background-color: rgba(31, 35, 38, 0.6);
+            border: 1px solid rgba(236, 232, 225, 0.1);
+            padding: 30px 20px;
+            text-decoration: none;
+            color: var(--v-light);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .mode-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background-color: var(--v-light);
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            transition: background-color 0.2s ease;
+        }
+
+        .mode-card:hover {
+            background-color: var(--v-light);
+            color: var(--v-dark);
+            transform: translateY(-4px);
+            border-color: var(--v-light);
+        }
+
+        .mode-card:hover::after {
+            background-color: var(--v-red);
+        }
+
+        .mode-num {
+            font-size: 12px;
+            color: var(--v-red);
+            margin-bottom: 10px;
+        }
+
+        .mode-card:hover .mode-num {
+            color: var(--v-dark-muted);
+        }
+
+        .mode-name {
+            font-size: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Roster System Styling */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1100px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .roster-card {
+            background-color: rgba(31, 35, 38, 0.6);
+            border: 1px solid rgba(236, 232, 225, 0.1);
+            border-top: 4px solid var(--v-gray);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s ease;
+        }
+
+        .roster-card:hover {
+            border-top-color: var(--v-red);
+            background-color: rgba(31, 35, 38, 0.9);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        }
+
+        /* Portrait Container Placeholder */
+        .agent-picture-holder {
+            width: 100%;
+            aspect-ratio: 4/5;
+            background-color: rgba(17, 20, 26, 0.7);
+            border: 1px dashed rgba(236, 232, 225, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50,15 C38,15 30,24 30,36 C30,46 36,52 42,55 C28,62 18,75 15,95 L85,95 C82,75 72,62 58,55 C64,52 70,46 70,36 C70,24 62,15 50,15 Z' fill='%231f2326'/%3E%3Cpath d='M50,5 L50,115 M5,60 L95,60' stroke='rgba(255,70,85,0.07)' stroke-width='1'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .agent-picture-holder::before {
+            content: '+';
+            font-family: monospace;
+            color: rgba(236, 232, 225, 0.12);
+            font-size: 32px;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .agent-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            transition: opacity 0.2s ease;
+        }
+
+        .agent-img:not([src]), .agent-img[src=""] {
+            opacity: 0;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .agent-name {
+            font-size: 22px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--v-light);
+        }
+
+        .agent-role {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--v-red);
+        }
+
+        .agent-rank {
+            font-size: 13px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #c4c4c4;
+            margin-top: 10px;
+            border-top: 1px solid rgba(236, 232, 225, 0.1);
+            padding-top: 10px;
+        }
+
+        /* Settings Toggle Box */
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(31, 35, 38, 0.6);
+            padding: 20px 30px;
+            max-width: 500px;
+            border: 1px solid rgba(236, 232, 225, 0.05);
+        }
+
+        .toggle-btn {
+            background-color: transparent;
+            border: 2px solid var(--v-light);
+            color: var(--v-light);
+            padding: 8px 24px;
+            font-family: var(--v-font);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.15s ease;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--v-red);
+            border-color: var(--v-red);
+            color: var(--v-light);
+        }
+
+        /* Tactical Termination Alert Overlays */
+        .exit-modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(11, 14, 26, 0.95);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .exit-modal.triggered {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .terminal-box {
+            border: 1px solid var(--v-red);
+            background-color: #11141a;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            border-left: 5px solid var(--v-red);
+            box-shadow: 0 20px 50px rgba(255, 70, 85, 0.15);
+            text-align: center;
+        }
+
+        .warning-tag {
+            color: var(--v-red);
+            font-size: 13px;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .terminal-title {
+            font-size: 28px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .terminal-desc {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            color: var(--v-gray);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .v-btn-red {
+            background-color: var(--v-red);
+            color: var(--v-light);
+            border: none;
+            padding: 12px 30px;
+            font-family: var(--v-font);
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 2px;
+            font-size: 14px;
+            transition: opacity 0.15s ease;
+            clip-path: polygon(0 0, 90% 0, 100% 30%, 100% 100%, 10% 100%, 0 70%);
+        }
+
+        .v-btn-red:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-bg"></div>
+
+    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+    <div class="ui-wrapper" id="main-ui">
+        
+        <div class="left-panel">
+            <div class="game-logo">TACTICAL // ENGINE</div>
+            
+            <nav class="main-menu">
+                <button class="menu-btn" onclick="switchScreen('start-screen')">Start Game</button>
+                <button class="menu-btn" onclick="switchScreen('roster-screen')">Roster</button>
+                <button class="menu-btn" onclick="switchScreen('settings-screen')">Settings</button>
+                <button class="menu-btn" onclick="triggerExit()">Exit</button>
+            </nav>
+            
+            <div class="footer-version">PROTOTYPE v1.0.26</div>
+        </div>
+
+        <div class="right-panel">
+            
+            <div id="welcome-screen" class="screen-content active">
+                <div class="welcome-art-container">
+                    <div class="hud-bracket bracket-tl"></div>
+                    <div class="hud-bracket bracket-br"></div>
+                    
+                    <img src="all pic.png" class="welcome-splash-img" alt="Tactical Background Vector">
+                    
+                    <div class="welcome-overlay-text">
+                        <div class="welcome-tagline">// ALGORITHM CONTROL NODE</div>
+                        <h2 class="welcome-heading">SYSTEM READY</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div id="start-screen" class="screen-content">
+                <div class="screen-title">
+                    <span>Select Protocol</span>
+                    <span class="screen-subtitle">// CHOOSE MATCH TYPE</span>
+                </div>
+                <div class="modes-grid">
+                    <a href="division.html" class="mode-card">
+                        <div class="mode-num">01</div>
+                        <div class="mode-name">Division Algorithm</div>
+                    </a>
+                    <a href="euclidean.html" class="mode-card">
+                        <div class="mode-num">02</div>
+                        <div class="mode-name">Euclidean Algorithm</div>
+                    </a>
+                    <a href="collatz.html" class="mode-card">
+                        <div class="mode-num">03</div>
+                        <div class="mode-name">Collatz Sequence</div>
+                    </a>
+                    <a href="fibonacci.html" class="mode-card">
+                        <div class="mode-num">04</div>
+                        <div class="mode-name">Fibonacci Sequence</div>
+                    </a>
+                    <a href="tribonacci.html" class="mode-card">
+                        <div class="mode-num">05</div>
+                        <div class="mode-name">Tribonacci Sequence</div>
+                    </a>
+                    <a href="lucas.html" class="mode-card">
+                        <div class="mode-num">06</div>
+                        <div class="mode-name">Lucas Sequence</div>
+                    </a>
+                </div>
+            </div>
+
+            <div id="roster-screen" class="screen-content">
+                <div class="screen-title">
+                    <span>Active Roster</span>
+                    <span class="screen-subtitle">// AGENT ASSIGNMENT</span>
+                </div>
+                
+                <div class="roster-grid">
+                    <div class="roster-card">
+                        <div class="agent-picture-holder">
+                            <img src="charles.png" class="agent-img" onerror="this.style.display='none'">
+                        </div>
+                        <div class="agent-info">
+                            <span class="agent-name">Jett</span>
+                            <span class="agent-role">Duelist</span>
+                            <span class="agent-rank">RANK: Diamond I</span>
+                        </div>
+                    </div>
+
+                    <div class="roster-card">
+                        <div class="agent-picture-holder">
+                            <img src="bading.png" class="agent-img" onerror="this.style.display='none'">
+                        </div>
+                        <div class="agent-info">
+                            <span class="agent-name">Sage</span>
+                            <span class="agent-role">Duelist</span>
+                            <span class="agent-rank">RANK: Immortal III</span>
+                        </div>
+                    </div>
+
+                    <div class="roster-card">
+                        <div class="agent-picture-holder">
+                            <img src="cede.png" class="agent-img" onerror="this.style.display='none'">
+                        </div>
+                        <div class="agent-info">
+                            <span class="agent-name">Brimstone</span>
+                            <span class="agent-role">Smoker / Controller</span>
+                            <span class="agent-rank">RANK: Platinum II</span>
+                        </div>
+                    </div>
+
+                    <div class="roster-card">
+                        <div class="agent-picture-holder">
+                            <img src="marcos.png" class="agent-img" onerror="this.style.display='none'">
+                        </div>
+                        <div class="agent-info">
+                            <span class="agent-name">Phoenix</span>
+                            <span class="agent-role">Initiator</span>
+                            <span class="agent-rank">RANK: Diamond III</span>
+                        </div>
+                    </div>
+
+                    <div class="roster-card">
+                        <div class="agent-picture-holder">
+                            <img src="migs.png" class="agent-img" onerror="this.style.display='none'">
+                        </div>
+                        <div class="agent-info">
+                            <span class="agent-name">Omen</span>
+                            <span class="agent-role">Smoker / Controller</span>
+                            <span class="agent-rank">RANK: Radiant</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settings-screen" class="screen-content">
+                <div class="screen-title">
+                    <span>Configuration</span>
+                    <span class="screen-subtitle">// SYSTEM UTILITIES</span>
+                </div>
+                <div class="setting-row">
+                    <span>BACKGROUND AUDIO AUDIO_LOOP_01</span>
+                    <button id="music-toggle" class="toggle-btn" onclick="toggleAudio()">OFF</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="exitModal" class="exit-modal">
+        <div class="terminal-box">
+            <span class="warning-tag">⚠️ ALERT // CRITICAL</span>
+            <h2 class="terminal-title">CONNECTION SEVERED</h2>
+            <p class="terminal-desc">
+                The terminal sequence runtime connection has been terminated by manual instruction. Core logic engine is offline.<br><br>
+                Status code: 0x00F93F<br>
+                [System Secure]
+            </p>
+            <button onclick="closeTabFallback()" class="v-btn-red">Close Application Tab</button>
+        </div>
+    </div>
+
+    <script>
+        const audioTrack = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+        const mainUI = document.getElementById('main-ui');
+        const exitModal = document.getElementById('exitModal');
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen-content').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+        }
+
+        function toggleAudio() {
+            if (audioTrack.paused) {
+                audioTrack.play().catch(err => {
+                    console.log("Browser policy blocked instant playback until direct user interaction.");
+                });
+                musicToggle.textContent = "ON";
+                musicToggle.classList.add('active');
+            } else {
+                audioTrack.pause();
+                musicToggle.textContent = "OFF";
+                musicToggle.classList.remove('active');
+            }
+        }
+
+        function triggerExit() {
+            // Blur and dim the core operational layout seamlessly
+            mainUI.style.filter = "blur(10px)";
+            mainUI.style.opacity = "0.3";
+            mainUI.style.transform = "translateY(20px)";
+            
+            // Bring up the critical termination layout menu overlay 
+            exitModal.classList.add('triggered');
+            
+            // Attempt standard safe closure protocol behind the scenes
+            window.close();
+        }
+
+        function closeTabFallback() {
+            window.close();
+            alert("Security protocol notice: Modern browser architecture blocks automated tab closures unless opened via script variables. You may now safely click and close this browser tab panel directly.");
+        }
+    </script>
+    
+</body>
+</html>

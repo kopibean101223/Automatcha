@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT // Collatz Sequence Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #0f1923;
+            background-image: 
+                linear-gradient(rgba(15, 25, 35, 0.95), rgba(15, 25, 35, 0.95)),
+                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z' fill='%231f2937' fill-opacity='0.15' fill-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .v-title {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .v-panel {
+            background-color: #111e2e;
+            border-left: 4px solid #ff4655;
+            box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .v-panel::before {
+            content: "/// COL-P-4";
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            font-size: 0.75rem;
+            color: rgba(255, 70, 85, 0.4);
+        }
+        .v-input {
+            background-color: #0f1923;
+            border: 1px solid #383e47;
+            color: #ece8e1;
+            transition: all 0.2s ease;
+        }
+        .v-input:focus:not(:disabled) {
+            border-color: #ff4655;
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 70, 85, 0.3);
+        }
+        .v-input:disabled {
+            background-color: rgba(15, 25, 35, 0.5);
+            border-color: #2a2f35;
+            color: #555e68;
+            cursor: not-allowed;
+        }
+        .v-btn-primary {
+            background-color: #ff4655;
+            color: #ece8e1;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-primary:hover:not(:disabled) {
+            background-color: #ece8e1;
+            color: #111e2e;
+        }
+        .v-btn-primary:disabled {
+            background-color: #222b35;
+            color: #4b5563;
+            cursor: not-allowed;
+        }
+        .v-btn-primary:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        .v-btn-secondary {
+            background-color: transparent;
+            color: #ece8e1;
+            border: 1px solid #383e47;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-secondary:hover {
+            border-color: #ece8e1;
+            background-color: rgba(236, 232, 225, 0.05);
+        }
+        .v-btn-danger {
+            background-color: rgba(219, 39, 119, 0.1);
+            color: #f43f5e;
+            border: 1px solid #f43f5e;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-danger:hover {
+            background-color: #f43f5e;
+            color: #0f1923;
+        }
+        .v-btn-accent {
+            background-color: #00f3c5;
+            color: #0f1923;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-accent:hover {
+            background-color: #ece8e1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-base tracking-wide text-[#ece8e1]">
+
+    <div id="mainCard" class="v-panel w-full max-w-2xl p-6 border border-slate-800 transition-all duration-500">
+        
+        <div id="systemStatus" class="hidden bg-red-950/40 text-red-500 border border-red-500 p-3 text-center font-bold tracking-widest uppercase animate-pulse mb-4 text-sm font-sans">
+            System Terminated
+        </div>
+
+        <div class="border-b border-slate-700 pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <span class="text-xs text-[#ff4655] font-bold tracking-widest block mb-1">// VALORANT PROTOCOL // SYSTEM_LAB_04</span>
+                <h1 class="v-title text-4xl font-bold text-white" id="headerLine">COLLATZ SEQUENCE</h1>
+            </div>
+            <a href="index.html" class="v-btn-secondary px-4 py-1.5 text-xs font-bold uppercase mb-1">
+                &lt; BACK TO MENU
+            </a>
+        </div>
+
+        <div class="bg-[#1b2735] p-5 border border-slate-700 relative overflow-hidden mb-6">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[#ff4655]"></div>
+            <h3 class="v-title text-[#ff4655] text-xl font-bold mb-3 tracking-wider">THE 3n + 1 CONJECTURE MODEL</h3>
+            
+            <p class="mb-4 text-slate-300 text-sm leading-relaxed">
+                The Collatz core sequence logic maps a continuous iterative trail framework starting from any positive integer initialization parameter <span class="text-white font-bold">n</span>. The engine computes next-step paths using an operational piecewise rule matrix:
+            </p>
+            
+            <div class="grid grid-cols-2 gap-4 text-center my-3 font-mono text-xs border border-slate-800 bg-[#0f1923] p-3">
+                <div class="border-r border-slate-800">
+                    <span class="text-[#00f3c5] font-bold block text-sm">IF N IS EVEN:</span>
+                    <span class="text-white block text-lg mt-1">f(n) = n / 2</span>
+                </div>
+                <div>
+                    <span class="text-[#ff4655] font-bold block text-sm">IF N IS ODD:</span>
+                    <span class="text-white block text-lg mt-1">f(n) = 3n + 1</span>
+                </div>
+            </div>
+
+            <p class="text-sm text-slate-300 leading-relaxed">
+                The mathematical conjecture projects that regardless of the initial core value stream seed parameter, the operation string always maps downward into a steady <span class="text-[#00f3c5] font-bold">4 &rarr; 2 &rarr; 1</span> terminal loop loop.
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex flex-col gap-3">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Input_Seed_Integer (n):</label>
+                <input type="text" id="num1" class="v-input w-full p-3 font-mono text-lg" placeholder="INPUT VALUE...">
+
+                <button id="execBtn" onclick="processCollatz()" class="v-btn-primary w-full py-3 text-md font-bold uppercase mt-2">
+                    Run Sequence Stream
+                </button>
+            </div>
+
+            <div id="resultBox" class="hidden mt-6 border border-[#00f3c5] bg-[#0f1923] p-4 relative">
+                <div class="absolute top-0 right-0 bg-[#00f3c5] text-[#0f1923] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest">Trace Protocol Logged</div>
+                
+                <div class="grid grid-cols-2 gap-3 uppercase text-xs tracking-wider mb-4 font-bold">
+                    <div class="bg-[#1b2735] p-3 border-l-2 border-white">Total Steps: <span id="outSteps" class="text-white block text-xl font-mono mt-1">0</span></div>
+                    <div class="bg-[#1b2735] p-3 border-l-2 border-[#00f3c5]">Peak Amplitude: <span id="outMax" class="text-[#00f3c5] block text-xl font-mono mt-1">0</span></div>
+                </div>
+
+                <p class="text-[#00f3c5] text-xs font-bold tracking-widest mb-1">// FULL RENDERED VECTOR STRING ARRAY:</p>
+                <div id="arrayOutput" class="text-white font-mono text-sm break-words tracking-wide leading-relaxed bg-[#111e2e]/50 p-3 border border-slate-900 max-h-40 overflow-y-auto">
+                    </div>
+
+                <div id="loopPrompt" class="hidden mt-6 border border-slate-700 bg-[#111e2e] p-4 text-center">
+                    <p class="text-xs text-slate-300 font-bold uppercase tracking-widest mb-3">// INITIALIZE ANOTHER PAIR SEQUENCE DATA LOOP?</p>
+                    <div class="flex gap-3 justify-center">
+                        <button onclick="resetSystem()" class="v-btn-accent px-8 py-2 text-sm font-bold uppercase">Yes</button>
+                        <button onclick="terminateSystem('MANUAL OVERRIDE')" class="v-btn-danger px-8 py-2 text-sm font-bold uppercase">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-[#111e2e] w-full max-w-sm border-l-4 border-[#ff4655] shadow-2xl border border-slate-800">
+            <div class="p-6">
+                <div class="flex items-center gap-2 text-[#ff4655] font-bold text-xs tracking-widest mb-2">// ACCESS DENIED</div>
+                <h3 class="v-title text-white font-black text-2xl uppercase mb-3 tracking-wide">PROTOCOL FAULT DETECTED</h3>
+                <p id="modalMsg" class="text-slate-300 font-medium text-sm leading-relaxed mb-6 font-sans"></p>
+                <button onclick="closeModal()" class="v-btn-primary w-full py-2.5 text-sm font-bold uppercase">
+                    ACKNOWLEDGE ERROR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showModal(msg) {
+            document.getElementById('modalMsg').innerText = msg;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function processCollatz() {
+            const raw = document.getElementById('num1').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const loopPrompt = document.getElementById('loopPrompt');
+            const arrayOutput = document.getElementById('arrayOutput');
+
+            resultBox.classList.add('hidden');
+            loopPrompt.classList.add('hidden');
+            arrayOutput.innerText = '';
+
+            if (!raw) return showModal("SYSTEM ERROR: Seed validation integer parameter is missing.");
+
+            const intRegex = /^-?\d+$/;
+            if (!intRegex.test(raw)) {
+                return showModal("SYNTAX ERROR: Letters, fractions or decimals detected. Whole numbers required.");
+            }
+
+            let n = parseInt(raw);
+
+            if (n <= 0) {
+                return showModal("VALIDATION ERROR: Mathematical bound crash. Input seed parameter must scale as a positive whole integer greater than zero (n >= 1).");
+            }
+
+            let history = [n];
+            let peakValue = n;
+            const stepLimit = 2000;
+
+            while (n !== 1 && history.length < stepLimit) {
+                if (n % 2 === 0) {
+                    n = n / 2;
+                } else {
+                    n = 3 * n + 1;
+                }
+                history.push(n);
+                if (n > peakValue) peakValue = n;
+            }
+
+            if (history.length >= stepLimit) {
+                return showModal(`EXECUTION FAULT: System reached safety buffer limit of ${stepLimit} nodes without hitting baseline convergence. Compute terminated to prevent stack overflow.`);
+            }
+
+            document.getElementById('outSteps').innerText = history.length - 1;
+            document.getElementById('outMax').innerText = peakValue;
+            arrayOutput.innerText = history.join(' → ');
+
+            resultBox.classList.remove('hidden');
+            loopPrompt.classList.remove('hidden');
+            document.getElementById('execBtn').disabled = true;
+        }
+
+        function resetSystem() {
+            document.getElementById('num1').value = '';
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('loopPrompt').classList.add('hidden');
+            document.getElementById('arrayOutput').innerText = '';
+            document.getElementById('execBtn').disabled = false;
+            document.getElementById('num1').focus();
+        }
+
+        function terminateSystem(reason) {
+            const num1 = document.getElementById('num1');
+            const btn = document.getElementById('execBtn');
+            const status = document.getElementById('systemStatus');
+            const card = document.getElementById('mainCard');
+            
+            document.getElementById('loopPrompt').classList.add('hidden');
+
+            num1.disabled = true;
+            btn.disabled = true;
+
+            card.classList.replace('border-[#ff4655]', 'border-slate-600');
+            card.style.borderLeftColor = '#475569';
+            
+            status.innerText = `SYSTEM TERMINATED // ${reason}`;
+            status.classList.remove('hidden');
+        }
+    </script>
+    <div class="fixed bottom-4 right-4 z-50">
+    <button id="audioToggleBtn" onclick="toggleGlobalAudio()" class="v-btn-secondary px-3 py-2 text-xs font-bold uppercase tracking-widest flex items-center gap-2 bg-[#111e2e]/90 backdrop-blur">
+        🔊 AUDIO: UNKNOWN
+    </button>
+</div>
+
+<audio id="globalBgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+<script>
+    const AUDIO_STORAGE_KEY = 'v_protocol_audio_state';
+    const bgAudio = document.getElementById('globalBgMusic');
+    const audioBtn = document.getElementById('audioToggleBtn');
+
+    // Lower the default volume slightly so it's a sleek tactical background layer
+    bgAudio.volume = 0.2;
+
+    // 1. INITIALIZATION: Run sync protocol on boot loop
+    window.addEventListener('DOMContentLoaded', () => {
+        const audioState = localStorage.getItem(AUDIO_STORAGE_KEY);
+        
+        if (audioState === 'enabled') {
+            updateAudioUI(true);
+            // Setup an event listener to catch the user's first click action anywhere on screen
+            document.body.addEventListener('click', primaryClickAudioTrigger, { once: true });
+        } else {
+            updateAudioUI(false);
+        }
+    });
+
+    // Browser bypass action: starts loop on user interaction matrix
+    function primaryClickAudioTrigger() {
+        const audioState = localStorage.getItem(AUDIO_STORAGE_KEY);
+        if (audioState === 'enabled') {
+            bgAudio.play().catch(err => console.log("Audio pipeline blocked by security sandbox:", err));
+        }
+    }
+
+    // 2. TOGGLE ACTION: Mutate states and commit to hardware memory
+    function toggleGlobalAudio() {
+        const audioState = localStorage.getItem(AUDIO_STORAGE_KEY);
+        
+        if (audioState !== 'enabled') {
+            // Turning sound ON
+            localStorage.setItem(AUDIO_STORAGE_KEY, 'enabled');
+            bgAudio.play().catch(err => console.log("Interaction required before initialization."));
+            updateAudioUI(true);
+        } else {
+            // Turning sound OFF
+            localStorage.setItem(AUDIO_STORAGE_KEY, 'disabled');
+            bgAudio.pause();
+            updateAudioUI(false);
+        }
+    }
+
+    // 3. UI RENDERING: Update tactical button text markers
+    function updateAudioUI(isEnabled) {
+        if (isEnabled) {
+            audioBtn.innerText = "🔊 AUDIO: ACTIVE";
+            audioBtn.style.borderColor = "#00f3c5"; // Teal active tracking line
+            audioBtn.style.color = "#00f3c5";
+        } else {
+            audioBtn.innerText = "🔇 AUDIO: MUTED";
+            audioBtn.style.borderColor = "#383e47"; // Dim layout default lines
+            audioBtn.style.color = "#ece8e1";
+        }
+    }
+</script>
+</body>
+</html>

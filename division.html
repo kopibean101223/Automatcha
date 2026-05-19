@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT // Division Algorithm Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #0f1923;
+            background-image: 
+                linear-gradient(rgba(15, 25, 35, 0.95), rgba(15, 25, 35, 0.95)),
+                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z' fill='%231f2937' fill-opacity='0.15' fill-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+        }
+        .v-title {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .v-panel {
+            background-color: #111e2e;
+            border-left: 4px solid #ff4655;
+            box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .v-panel::before {
+            content: "/// DIV-P-4";
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            font-size: 0.75rem;
+            color: rgba(255, 70, 85, 0.4);
+        }
+        .v-input {
+            background-color: #0f1923;
+            border: 1px solid #383e47;
+            color: #ece8e1;
+            transition: all 0.2s ease;
+        }
+        .v-input:focus:not(:disabled) {
+            border-color: #ff4655;
+            outline: none;
+            box-shadow: 0 0 8px rgba(255, 70, 85, 0.3);
+        }
+        .v-input:disabled {
+            background-color: rgba(15, 25, 35, 0.5);
+            border-color: #2a2f35;
+            color: #555e68;
+            cursor: not-allowed;
+        }
+        .v-btn-primary {
+            background-color: #ff4655;
+            color: #ece8e1;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-primary:hover:not(:disabled) {
+            background-color: #ece8e1;
+            color: #111e2e;
+        }
+        .v-btn-primary:disabled {
+            background-color: #222b35;
+            color: #4b5563;
+            cursor: not-allowed;
+        }
+        .v-btn-primary:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        .v-btn-secondary {
+            background-color: transparent;
+            color: #ece8e1;
+            border: 1px solid #383e47;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-secondary:hover {
+            border-color: #ece8e1;
+            background-color: rgba(236, 232, 225, 0.05);
+        }
+        .v-btn-danger {
+            background-color: rgba(219, 39, 119, 0.1);
+            color: #f43f5e;
+            border: 1px solid #f43f5e;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-danger:hover {
+            background-color: #f43f5e;
+            color: #0f1923;
+        }
+        .v-btn-accent {
+            background-color: #00f3c5;
+            color: #0f1923;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 93% 0, 100% 30%, 100% 100%, 7% 100%, 0 70%);
+            transition: all 0.15s ease;
+        }
+        .v-btn-accent:hover {
+            background-color: #ece8e1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-base tracking-wide text-[#ece8e1]">
+
+    <div id="mainCard" class="v-panel w-full max-w-2xl p-6 border border-slate-800 transition-all duration-500">
+        
+        <div id="systemStatus" class="hidden bg-red-950/40 text-red-500 border border-red-500 p-3 text-center font-bold tracking-widest uppercase animate-pulse mb-4 text-sm font-sans">
+            System Terminated
+        </div>
+
+        <div class="border-b border-slate-700 pb-4 mb-6 flex justify-between items-end">
+            <div>
+                <span class="text-xs text-[#ff4655] font-bold tracking-widest block mb-1">// VALORANT PROTOCOL // SYSTEM_LAB_04</span>
+                <h1 class="v-title text-4xl font-bold text-white" id="headerLine">DIVISION ALGORITHM</h1>
+            </div>
+            <a href="index.html" class="v-btn-secondary px-4 py-1.5 text-xs font-bold uppercase mb-1">
+                &lt; BACK TO MENU
+            </a>
+        </div>
+
+        <div class="bg-[#1b2735] p-5 border border-slate-700 relative overflow-hidden mb-6">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[#ff4655]"></div>
+            <h3 class="v-title text-[#ff4655] text-xl font-bold mb-3 tracking-wider">THE DIVISION ALGORITHM</h3>
+            
+            <p class="mb-4 text-slate-300 text-sm leading-relaxed">
+                Let <span class="text-white font-bold">m</span> and <span class="text-white font-bold">n</span> be positive integers. There are non-negative integers <span class="text-[#00f3c5] font-bold">q</span> and <span class="text-[#00f3c5] font-bold">r</span>, where <span class="text-[#ff4655] font-bold">0 &le; r &lt; n</span>, such that:
+            </p>
+            
+            <div class="my-4 text-center bg-[#0f1923] py-3 font-mono text-2xl text-white tracking-widest border border-slate-800 shadow-inner">
+                m = nq + r
+            </div>
+
+            <p class="text-sm text-slate-300 leading-relaxed">
+                The integer <span class="text-[#00f3c5] font-bold">q</span> is the quotient obtained when <span class="text-white font-bold">m</span> is divided by <span class="text-white font-bold">n</span>, while <span class="text-[#00f3c5] font-bold">r</span> is the remainder vector matrix.
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex flex-col gap-4">
+                <div class="relative">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Input_Integer_01:</label>
+                    <input type="text" id="num1" class="v-input w-full p-3 font-mono text-lg" placeholder="INPUT VALUE...">
+                </div>
+
+                <div class="relative">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Input_Integer_02:</label>
+                    <input type="text" id="num2" class="v-input w-full p-3 font-mono text-lg" placeholder="INPUT VALUE...">
+                </div>
+
+                <button id="execBtn" onclick="processDivision()" class="v-btn-primary w-full py-3 text-md font-bold uppercase mt-2">
+                    Execute Algorithm
+                </button>
+            </div>
+
+            <div id="resultBox" class="hidden mt-6 border border-[#00f3c5] bg-[#0f1923] p-4 relative">
+                <div class="absolute top-0 right-0 bg-[#00f3c5] text-[#0f1923] px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest">Data Matrix Calculated</div>
+                <p id="formula" class="text-white font-mono text-2xl mb-4 text-center tracking-wider font-bold bg-[#111e2e]/50 py-2 border border-slate-900"></p>
+                
+                <div class="grid grid-cols-2 gap-3 text-xs uppercase font-bold tracking-wider">
+                    <div class="bg-[#1b2735] p-3 border-l-2 border-white">Dividend: <span id="outM" class="text-white block text-lg font-mono tracking-tight mt-1"></span></div>
+                    <div class="bg-[#1b2735] p-3 border-l-2 border-white">Divisor: <span id="outN" class="text-white block text-lg font-mono tracking-tight mt-1"></span></div>
+                    <div class="bg-[#1b2735] p-3 border-l-2 border-[#00f3c5]">Quotient: <span id="outQ" class="text-[#00f3c5] block text-lg font-mono tracking-tight mt-1"></span></div>
+                    <div class="bg-[#1b2735] p-3 border-l-2 border-[#00f3c5]">Remainder: <span id="outR" class="text-[#00f3c5] block text-lg font-mono tracking-tight mt-1"></span></div>
+                </div>
+
+                <div id="loopPrompt" class="hidden mt-6 border border-slate-700 bg-[#111e2e] p-4 text-center">
+                    <p class="text-xs text-slate-300 font-bold uppercase tracking-widest mb-3">// INITIALIZE ANOTHER PAIR SEQUENCE DATA LOOP?</p>
+                    <div class="flex gap-3 justify-center">
+                        <button onclick="resetSystem()" class="v-btn-accent px-8 py-2 text-sm font-bold uppercase">Yes</button>
+                        <button onclick="terminateSystem('MANUAL OVERRIDE')" class="v-btn-danger px-8 py-2 text-sm font-bold uppercase">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-[#111e2e] w-full max-w-sm border-l-4 border-[#ff4655] shadow-2xl border border-slate-800">
+            <div class="p-6">
+                <div class="flex items-center gap-2 text-[#ff4655] font-bold text-xs tracking-widest mb-2">// ACCESS DENIED</div>
+                <h3 class="v-title text-white font-black text-2xl uppercase mb-3 tracking-wide">PROTOCOL FAULT DETECTED</h3>
+                <p id="modalMsg" class="text-slate-300 font-medium text-sm leading-relaxed mb-6 font-sans"></p>
+                <button onclick="closeModal()" class="v-btn-primary w-full py-2.5 text-sm font-bold uppercase">
+                    ACKNOWLEDGE ERROR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showModal(msg) {
+            document.getElementById('modalMsg').innerText = msg;
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function processDivision() {
+            const raw1 = document.getElementById('num1').value.trim();
+            const raw2 = document.getElementById('num2').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const loopPrompt = document.getElementById('loopPrompt');
+
+            resultBox.classList.add('hidden');
+            loopPrompt.classList.add('hidden');
+
+            if (!raw1) return showModal("SYSTEM ERROR: First integer is missing. Please provide a valid input.");
+            if (!raw2) return showModal("SYSTEM ERROR: Second integer is missing. Please provide a valid input.");
+
+            const intRegex = /^-?\d+$/;
+            if (!intRegex.test(raw1) || !intRegex.test(raw2)) {
+                return showModal("SYNTAX ERROR: Letters or symbols detected. Protocol requires whole numbers only.");
+            }
+
+            const n1 = parseInt(raw1);
+            const n2 = parseInt(raw2);
+
+            if (n1 <= 0 || n2 <= 0) {
+                return showModal("VALIDATION ERROR: Target acquired must be a positive integer (greater than 0).");
+            }
+
+            const m = Math.max(n1, n2);
+            const n = Math.min(n1, n2);
+            const q = Math.floor(m / n);
+            const r = m % n;
+
+            document.getElementById('formula').innerText = `${m} = ${n}(${q}) + ${r}`;
+            document.getElementById('outM').innerText = m;
+            document.getElementById('outN').innerText = n;
+            document.getElementById('outQ').innerText = q;
+            document.getElementById('outR').innerText = r;
+
+            resultBox.classList.remove('hidden');
+            loopPrompt.classList.remove('hidden');
+            document.getElementById('execBtn').disabled = true;
+        }
+
+        function resetSystem() {
+            document.getElementById('num1').value = '';
+            document.getElementById('num2').value = '';
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('loopPrompt').classList.add('hidden');
+            document.getElementById('execBtn').disabled = false;
+            document.getElementById('num1').focus();
+        }
+
+        function terminateSystem(reason) {
+            const num1 = document.getElementById('num1');
+            const num2 = document.getElementById('num2');
+            const btn = document.getElementById('execBtn');
+            const status = document.getElementById('systemStatus');
+            const card = document.getElementById('mainCard');
+            
+            document.getElementById('loopPrompt').classList.add('hidden');
+
+            num1.disabled = true;
+            num2.disabled = true;
+            btn.disabled = true;
+
+            card.classList.replace('border-[#ff4655]', 'border-slate-600');
+            card.style.borderLeftColor = '#475569';
+            
+            status.innerText = `SYSTEM TERMINATED // ${reason}`;
+            status.classList.remove('hidden');
+        }
+    </script>
+    <div class="fixed bottom-4 right-4 z-50">
+    <button id="audioToggleBtn" onclick="toggleGlobalAudio()" class="v-btn-secondary px-3 py-2 text-xs font-bold uppercase tracking-widest flex items-center gap-2 bg-[#111e2e]/90 backdrop-blur">
+        🔊 AUDIO: UNKNOWN
+    </button>
+</div>
+
+<audio id="globalBgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+<script>
+    const AUDIO_STORAGE_KEY = 'v_protocol_audio_state';
+    const bgAudio = document.getElementById('globalBgMusic');
+    const audioBtn = document.getElementById('audioToggleBtn');
+
+    // Lower the default volume slightly so it's a sleek tactical background layer
+    bgAudio.volume = 0.2;
+
+    // 1. INITIALIZATION: Run sync protocol on boot loop
+    window.addEventListener('DOMContentLoaded', () => {
+        const audioState = localStorage.getItem(AUDIO_STORAGE_KEY);
+        
+        if (audioState === 'enabled') {
+            updateAudioUI(true);
+            // Setup an event listener to catch the user's first click action anywhere on screen
+            document.body.addEventListener('click', primaryClickAudioTrigger, { once: true });
+        } else {
+            updateAudioUI(false);
+        }
+    });
+
+    // Browser bypass action: starts loop on user interaction matrix
+    function primaryClickAudioTrigger() {
+        const audioState = localStorage.getItem(AUDIO_STORAGE_KEY);
+        if (audioState === 'enabled') {
+            bgAudio.play().catch(err => console.log("Audio pipeline blocked by security sandbox:", err));
+        }
+    }
+
+    // 2. TOGGLE ACTION: Mutate states and commit to hardware memory
+    function toggleGlobalAudio() {
+        const audioState = localStorage.getItem(AUDIO_STORAGE_KEY);
+        
+        if (audioState !== 'enabled') {
+            // Turning sound ON
+            localStorage.setItem(AUDIO_STORAGE_KEY, 'enabled');
+            bgAudio.play().catch(err => console.log("Interaction required before initialization."));
+            updateAudioUI(true);
+        } else {
+            // Turning sound OFF
+            localStorage.setItem(AUDIO_STORAGE_KEY, 'disabled');
+            bgAudio.pause();
+            updateAudioUI(false);
+        }
+    }
+
+    // 3. UI RENDERING: Update tactical button text markers
+    function updateAudioUI(isEnabled) {
+        if (isEnabled) {
+            audioBtn.innerText = "🔊 AUDIO: ACTIVE";
+            audioBtn.style.borderColor = "#00f3c5"; // Teal active tracking line
+            audioBtn.style.color = "#00f3c5";
+        } else {
+            audioBtn.innerText = "🔇 AUDIO: MUTED";
+            audioBtn.style.borderColor = "#383e47"; // Dim layout default lines
+            audioBtn.style.color = "#ece8e1";
+        }
+    }
+</script>
+</body>
+</html>
